@@ -1,0 +1,351 @@
+//hw05 Linear Iterative Methods
+//100060007 Ming-Chang Chiu
+//Date: 2015.4.5
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "MAT.h"
+#include <algorithm>
+#include <cmath>
+MAT::MAT(int dim)
+{
+    n=dim;
+    va=(VEC **)malloc(n*sizeof(VEC*));
+    for (int i=0;i<n;i++)
+	va[i]=newVEC(n);
+}
+MAT::MAT(const MAT &m1)
+{
+    VEC **vsrc=m1.va; //to get around not indexing const MAT
+    n=m1.n;
+    va=(VEC **)malloc(n*sizeof(VEC*));
+    for(int i=0;i<n;i++){
+	va[i]=newVEC(n);
+	(*va[i])=(*vsrc[i]);
+    }
+}
+MAT::MAT(int dim,double *v)
+{
+    n=dim;
+    va=(VEC **)malloc(n*sizeof(VEC*));
+    for(int i=0;i<n;i++){
+	va[i]=newVEC(n);
+	for(int j=0;j<n;j++){
+	    (*va[i])[j]= *(v++); //array indexing + VEC indexing
+	}
+    }
+}
+MAT::~MAT()
+{
+    for (int i=n-1;i>=0;i--) free(va[i]);
+    free(va);
+}
+int MAT::dim()
+{
+    return n;
+}
+MAT MAT::tpose()
+{
+    MAT mnew(n);
+    for(int i=0;i<n;i++){
+	for(int j=0;j<n;j++){
+	    mnew[i][j]=(*va[j])[i];
+	}
+    }
+    return mnew;
+}
+MAT & MAT::operator-() {// Need no returning?
+    for (int i=0; i<n; i++)
+        for (int j=0; j<n; j++)
+	    (*va[i])[j]=-(*va[i])[j];
+}
+MAT &MAT::operator=(MAT m1)
+{
+    for (int i=0; i<n; i++)
+        (*va[i])=m1[i];
+    return *this;
+}
+MAT &MAT::operator+=(MAT &m1)
+{
+    for (int i=0; i<n; i++)
+        (*va[i])+=m1[i];
+    return *this;
+}
+MAT &MAT::operator-=(MAT &m1)
+{
+    for (int i=0; i<n; i++)
+        (*va[i])-=m1[i];
+    return *this;
+}
+MAT &MAT::operator*=(double a)
+{
+    for (int i=0; i<n; i++)
+        (*va[i])*=a;
+    return *this;
+}
+MAT &MAT::operator/=(double a)
+{
+    for (int i=0; i<n; i++)
+        (*va[i])/=a;
+    return *this;
+}
+MAT MAT::operator+(MAT m1)
+{
+    MAT s(n);
+    for (int i=0; i<n; i++)
+        s[i]=(*va[i])+m1[i];
+    return s;
+}
+MAT MAT::operator-(MAT m1)
+{
+    MAT s(n);
+    for (int i=0; i<n; i++)
+        s[i]=(*va[i])-m1[i];
+    return s;
+}
+MAT MAT::operator*(MAT m1)
+{
+    MAT z(n);
+    for (int i=0; i<n; i++) {
+        for (int j=0; j<n; j++) {
+            z[i][j]=0;
+	    for (int k=0; k<n; k++)
+		z[i][j]+=((*va[i])[k]*m1[k][j]);
+	}
+    }
+    return z;
+}
+VEC &MAT::operator[](int m)
+{
+    return *va[m];
+}
+VEC MAT::operator*(VEC v1)
+{
+    VEC s(n);
+    for (int i=0; i<n; i++) {
+        s[i]=(*va[i])*v1;
+    }
+    return s;
+}
+MAT MAT::operator*(double a)
+{
+    MAT z(n);
+    for (int i=0; i<n; i++) {
+        for (int j=0; j<n; j++) {
+            z[i][j]=(*va[i])[j] * a;//why use (*va[i])[j] rather than va[i][j];
+        }
+    }
+    return z;    
+}
+MAT MAT::operator/(double a)
+{
+    MAT z(n);
+    for (int i=0; i<n; i++) {
+        for (int j=0; j<n; j++) {
+            z[i][j]=(*va[i])[j] / a;
+        }
+    }
+    return z;
+}
+MAT operator*(double a, MAT &m1)
+{
+    MAT v2(m1.n);
+    for (int i=0; i<m1.n; i++) {
+        for (int j=0; j<m1.n; j++) {
+            v2[i][j]= a * m1[i][j];
+        }
+    }
+    return v2;
+}
+VEC operator*(VEC &v1,MAT &m1)
+{
+    VEC v2(m1.n);
+    for (int i=0; i<m1.n; i++) {
+        v2[i]=0;
+        for (int j=0; j<m1.n; j++) {
+            v2[i] += v1[j]*m1[j][i];
+        }
+    }
+    return v2;
+}
+MAT &luFact(MAT &m1)
+{
+    int i,j,k;
+    for(i=0;i<m1.dim();i++){
+	//copy m1[i][j] to u[i][j] needs no action due to in-place LU
+	for(j=i+1; j<m1.dim(); j++)// form l[j][i]
+	    m1[j][i] /= m1[i][i];
+	for(j=i+1; j<m1.dim(); j++){//update lower submatrix
+	    for(k=i+1; k<m1.dim(); k++){
+		m1[j][k] -= m1[j][i]*m1[i][k];
+	    }
+	}
+    }
+    return m1;
+}
+VEC fwdSubs(MAT &m1,VEC b)//fwdSubs must be modified from the one used by LU Decomposition
+{
+    VEC y = b;
+    //y[0]=b[0]/m1[0][0];
+    for(int i=0; i<m1.dim();i++){
+      //y[i]/=m1[i][i];//Add this step for modification about Cholesky method
+	for(int j=i+1; j<m1.dim(); j++)
+	    y[j] -= m1[j][i]*y[i];
+    }
+    return y;
+}
+VEC bckSubs(MAT &m1,VEC b)//b as y
+{
+    int i,j,k;
+    VEC x=b;
+    for(i=m1.dim()-1 ;i>=0 ;i--){
+	x[i] /= m1[i][i];
+	for(j=i-1; j>=0; j--)
+	    x[j] -= m1[j][i] * x[i];
+    }
+    return x;
+}
+MAT &cholesky(MAT &A)
+{ 
+    int i,j,k;
+    for(i=0; i<A.dim(); i++){
+	A[i][i] = sqrt(A[i][i]);
+	for(j=i+1; j<A.dim(); j++){
+	    A[j][i] /= A[i][i];
+	}
+	for(j=i+1;j<A.dim();j++){
+	    for(k=i+1; k<=j;k++)
+		A[j][k] -= A[j][i]*A[k][i];
+	}
+	for(k=i+1;k<A.dim();k++) A[i][k]=0; // since our Cholesky just gives the lower triangle and doesn't change the val of upper triangle, we have to clear that by hand   
+    }
+    return A;
+}
+VEC choSolve(MAT &L,VEC b)
+{
+    //fwdSubs(L,b);
+  MAT LT=L.tpose();//LT as the tranpose of L
+    return bckSubs(LT,fwdSubs(L,b));
+} 
+double l2norm(VEC x){
+    double sum = 0.0;
+    for(int i = 0; i< x.len(); i++){
+	sum += (x[i]*x[i]);
+    }
+    /*sum += (x[ std::sqrt(x.len())-1 ] * x[ std::sqrt(x.len())-1 ]);
+    sum += ( x[ (std::sqrt(x.len()))*( std::sqrt(x.len())-1 ) ] * x[ (std::sqrt(x.len()))*( std::sqrt(x.len())-1 ) ] );
+    sum += (x[ std::sqrt(x.len())*std::sqrt(x.len())-1 ] * x[ std::sqrt(x.len())*std::sqrt(x.len())-1 ]);
+    */
+    return sqrt(sum);
+}
+double l1norm(VEC x){
+    double sum = 0.0;
+    for (int i = 0; i < x.len(); i++){
+	sum += std::abs(x[i]);
+    }
+    return sum;
+}
+double linfnorm(VEC x){
+    double max;
+    for (int i = 1 ;i< x.len();i++)
+	max = std::max(x[i],x[i-1]);
+    return max;
+    //max = std::max(std::abs(x[ std::sqrt(x.len())-1 ]), std::abs(x[ (std::sqrt(x.len()))*( std::sqrt(x.len())-1 ) ]));
+    //return //std::max(max, std::abs( x[ std::sqrt(x.len())*std::sqrt(x.len())-1 ]));
+}
+int jacobi(MAT &A,VEC b,VEC &x,int maxIter,double tol)
+{
+    int k = 0;
+    double theta=0.0;
+    VEC newx(A.dim());
+    while( l1norm(newx-x) > tol)
+    {
+	x = newx;
+        for(int i=0; i< A.dim(); i++)
+	{
+	    theta = 0.0;
+            for(int j=0; j<A.dim();j++){
+		if(i!=j){
+		    theta += (A[i][j]*x[j]);
+		}
+	    }
+	    newx[i]= (b[i]-theta)/A[i][i];
+        }
+        k++;
+        //for(int r=0;r<A.dim();r++)printf(" %lf ",newx[r]);	
+        //printf("\n");
+	//printf("Vne=%lf; Vsw=%lf; Vse=%lf;\n", newx[A.dim()], newx[A.dim()*(A.dim()-1)], newx[A.dim()*A.dim()-1]);
+	//printf("error:%E \n",std::abs((newx - x)[2])+std::abs((newx - x)[6])+std::abs((newx - x)[8]));
+	if (k == maxIter){
+            break;
+	}
+    }
+    //printf("%lf; %lf; %lf \n",std::abs((newx )[2]),std::abs((newx )[6]),std::abs((newx )[8]));
+    return k;
+}
+int gaussSeidel(MAT &A,VEC b,VEC &x,int maxIter,double tol)
+{
+    int k = 0;
+    double theta=0.0;
+    VEC newx(A.dim());
+    while(l1norm((newx - x)) > tol)
+    {
+      //printf("error:%E \n",(newx - x)[1]);
+        
+        for(int i=0; i< A.dim(); i++)
+	{
+	    theta = 0.0;
+            for(int j=0; j<A.dim();j++){
+		if(i!=j){
+		    theta += (A[i][j]*newx[j]);
+		}
+	    }
+	    newx[i]= (b[i]-theta)/A[i][i];
+        }
+        k++;
+        //for(int r=0;r<A.dim();r++)printf(" %lf ",newx[r]);
+        //printf("\n");
+
+        if (k == maxIter)
+            break;
+    }
+    //printf("%lf; %lf; %lf \n",std::abs((newx )[2]),std::abs((newx )[6]),std::abs((newx )[8]));
+    return k;
+}
+int sgs(MAT &A,VEC b,VEC &x,int maxIter,double tol)
+{
+    int k = 0;
+    double theta=0.0;
+    VEC newx(A.dim());
+    while(l1norm(newx - x) > tol)
+    {
+      //printf("error:%E, %E\n",l1norm(newx - x),tol);
+        
+        for(int i=0; i< A.dim(); i++)
+	{
+	    theta = 0.0;
+            for(int j=0; j<A.dim();j++){
+		if(i!=j){
+		    theta += (A[i][j]*newx[j]);
+		}
+	    }
+	    newx[i]= (b[i]-theta)/A[i][i];
+	    theta = 0.0;
+            for(int j = (A.dim()-1); j >= 0; j--){
+		if(i!=j){
+		    theta += (A[i][j]*newx[j]);
+		}
+	    }
+	    newx[i]= (b[i]-theta)/A[i][i];
+	    
+        }
+        k++;
+        //for(int r=0;r<A.dim();r++)printf(" %lf ",newx[r]);
+        //printf("\n");
+	//printf("Vne=%lf; Vsw=%lf; Vse=%lf;\n", newx[A.dim()], newx[A.dim()*(A.dim()-1)], newx[A.dim()*A.dim()-1]);
+        if (k == maxIter)
+            break;
+    }
+    //printf("%lf; %lf; %lf \n",std::abs((newx )[2]),std::abs((newx )[6]),std::abs((newx )[8]));
+    return k;
+}

@@ -1,0 +1,82 @@
+//hw12 Nonlinear Resistor Networks
+//100060007 Ming-Chang Chiu
+//Date: 2015.5.29
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "MAT.h"
+#include <cmath>
+using namespace std;
+int main(int argc,char * argv[])
+{
+    int ch = atoi(argv[1]);
+    double h,R = 1, L = pow(10,-9),t = 0.;
+    double i = 1., V;
+    FILE *fp;
+    FILE *fp2;
+    FILE *fp3;
+    fp  = fopen("data1.csv","w");
+    fp2 = fopen("data2.csv","w");
+    fp3 = fopen("data3.csv","w");
+    if (ch == 1){//forward
+	h = 2 * pow(10,-11);
+	while(t <= 5 * pow(10, -9)){
+	    if(t == 0){
+		V = 1;
+		i = i + (h/L) * (V - R * i);
+		fprintf(fp,"%lf,%lf\n",t+h,i);
+		t = t + h;
+	    }
+	    else{
+		V = 0;
+		i = i + (h/L) * (V - R * i);
+		t+=h;
+		fprintf(fp,"%lf,%lf\n",t,i);
+		
+	    }
+	}
+    }
+    else if (ch == 2){//backward
+	h = 2 * pow(10,-11);
+	while(t <= 5 * pow(10, -9)){
+	    double y = (1 + (h*R/L));
+	    if(t == 0){
+		V = 1;
+		i = (i + (h * V / L) ) / y;
+		fprintf(fp2,"%lf,%lf\n",t+h,i);
+		t += h;
+	    }
+	    else{
+		V = 0;
+		i = (i + (h * V / L) ) / y;
+		fprintf(fp2,"%lf,%lf\n",t+h,i);
+		t += h;
+	    }
+	}
+    }
+    else if (ch == 3){//trapezoidal
+	h = 2 * pow(10,-10);
+	while(t <= 5 * pow(10, -9)){
+	    double y = (1 + (h * R / 2));
+	    if(t == 0){
+		V = 1;
+		i = (i + (h * V) - (h * R * i / 2) )/y;
+		fprintf(fp3,"%lf,%lf\n",t+h,i);
+		t += h;
+	    }
+	    else{
+		V = 0;
+		i = (i + (h * V) - (h * R * i / 2) )/y;
+		fprintf(fp3,"%lf,%lf\n",t+h,i);
+		t += h;
+	    }
+	}
+    }
+    else{
+	printf("Wrong input!!! Please start over!!");
+    }
+    fclose(fp);
+    fclose(fp2);
+    fclose(fp3);
+    return 0;
+}

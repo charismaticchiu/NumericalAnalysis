@@ -1,0 +1,53 @@
+//hw09 Polynomial Interpolations
+//100060007 Ming-Chang Chiu
+//Date: 2015.4.12
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "MAT.h"
+#include <cmath>
+#include <ctime>
+#include <climits>
+#include <iostream>
+using namespace std;
+int main(int argc, char * argv[])
+{
+    int i = 0, k = 0;
+    double xdata[21]={0.0},xinput[301]={0.0},diff[301] = {0.0};
+    double ydata[21]={0.0},yinput[301]={0.0},youtput[301] = {0.0};
+    char a,b;
+    double x = 475.0, y ;
+    FILE *fp;
+    
+    scanf("%c %c",&a,&b);
+    //scanf("%c",&b); 
+    printf("%c;; %c\n",a,b);
+    //scanf("%d %f",&xdata[i],&ydata[i]);
+    while(scanf("%lf %lf",&xdata[i],&ydata[i])!=EOF){
+	// printf("%d\n",i);	
+	i++;
+    }
+    fp = fopen("f301.dat","r");
+    fscanf(fp,"%c %c",&a,&b);
+    while(fscanf(fp,"%lf %lf",&xinput[k],&yinput[k])!=EOF){
+	// printf("%d\n",i);	
+	k++;
+    }
+    VEC XDATA(i),YDATA(i);
+    for (int j = 0 ; j < i; j++){ 
+	XDATA[j] = xdata[j]; 
+	YDATA[j] = ydata[j];
+    }
+    for (int j = 0; j < 301; j++){
+	youtput[j] = Lagrange(xinput[j], XDATA, YDATA);
+	printf("%lf\n",youtput[j]);
+    }
+    printf("Difference:\n\n\n");
+    for (int j = 0; j < 301; j++){
+	diff[j] = fabs(yinput[j]-youtput[j] );
+	printf("%lf\n",diff[j]);
+    }
+    
+    
+    return 0;
+}

@@ -1,0 +1,147 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{pdflscape}
+\setlength{\textwidth}{165mm}
+\setlength{\textheight}{235mm}
+\setlength{\oddsidemargin}{-0mm}
+\setlength{\topmargin}{-10mm}
+
+\usepackage{mathtools}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+\newcommand*{\Value}{\frac{1}{2}x^2}%
+%\usepackage{graphicx}
+\usepackage{graphicx}
+\usepackage{subfigure}%exclusive to subcaption
+%\usepackage{subcaption, float} 
+\usepackage{xcolor}
+\definecolor{ggray}{RGB}{47,79,79}
+\definecolor{firebrick}{RGB}{178,34,34}
+\definecolor{green1}{RGB}{50,205,50}
+\definecolor{umbrella}{RGB}{0,191,255}
+
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{patterns,arrows,shapes,positioning,shadows,trees}
+\tikzstyle{every node}=[draw=black,thick,anchor=west]
+\tikzstyle{selected}=[draw=red,fill=red!30]
+\tikzstyle{optional}=[dashed,fill=gray!50]
+\tikzstyle{neglected}=[dashed]
+
+\usepackage{amsfonts}
+\usepackage{amssymb,amsmath} %  $\displaystyle \sum$ will print a bigger one Σ , like in equations  in amsmath package
+
+\DeclareMathOperator{\sgn}{sgn}
+
+\usepackage{soul}
+
+\usepackage{titlesec}
+\titleformat*{\section}{\Large\sffamily}
+\titleformat*{\subsection}{\large\sffamily}
+\titleformat*{\subsubsection}{\itshape \sffamily}
+
+
+%\renewcommand{\refname}{參考文獻}
+\usepackage[nottoc]{tocbibind}
+%\settocbibname{參考文獻}
+
+\usepackage{multirow}
+\usepackage{booktabs}
+%\usepackage[square]{natbib}
+
+\title{Numerical Analysis HW0: QR Method}
+\author{Ming-Chang Chiu}
+\date{\today}
+\begin{document}
+\maketitle
+\fontsize{12}{20pt}\selectfont %本行指令第一個12是字體大小、第二個20是行距，selectfont一定要加才會發生效果。但此指令只對正文有效，註解無效
+
+\section{Objective}
+QR method is a very powerful method to find all the eigenvalues of a matrix. In this homework we are going to implement normal QR method and shifted QR method to find eigenvalues of a symmetric matrix and see their differences.
+
+
+\section{Implementation of QR Method }
+\begin{description}  
+
+\item [QR Method:]
+%\includegraphics[scale =0.6 ]{./power_method.png}\\
+
+\item [Shifted QR Method:] I implemented the following method and let it run iteratively. The requirement is the same as power method. $z$ can be calculated by LU method in the first formula and $\mu$ should be desired minimal eigenvalue in the end.\\
+%\includegraphics[scale =0.6 ]{./inverse_power.png}\\
+
+\item [Ending condition:] For the power method and its inverse form, I use the following RHS as the criteria. When it becomes smaller than $10^{-9}$, the function would terminate.\\
+%\includegraphics[scale =0.6 ]{./stopping_criteria.png}\\
+
+\end{description}
+
+\section{Workflow}
+
+\begin{description}  
+
+\item [Usage:] For example, time ./hw08.out < m3.dat
+\item [Read in matrix:] For linear system like the above figure, first build system matrix $A$ with Kirchoff node method.
+\item [Solve:] 
+\item[Desired output format:] 
+\end{description}
+
+\section{Results}
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline  Matrix Dimension & Iterations & CPU Time(s) & $\lambda_1$ & $\lambda_2$& $\lambda_3$  \\
+\hline 3	&17/20	        &0/0	        		&6.372281	&2			&0.627719	\\
+\hline 10	&35/249	        &0.005/0.012	&67.840399	&20.431729	&4.455992	\\
+\hline 20	&67/909	        &0.021/0.256	&270.495189	&81.223819	&17.235222	\\
+\hline 30	&107/1939	&0.099/1.793	&608.253606	&182.544889	&38.53868	\\
+\hline 40	&137/3262	&0.282/7.379	&1081.115447	&324.394506	&68.364136	\\
+\hline 50	&50000/4974	&212.621/22.997 &1689.080688	&506.772618	&106.711318	\\\hline
+
+\end{tabular}
+\begin{tabular}{|c|c|c|c|c|}
+\hline  Matrix Dimension & $\lambda_n$ & $\lambda_{n-1}$ & $\lambda_{n-2}$& Error \\
+\hline 3	&0.627719	&2			&6.372281	&4.79E-010\\
+\hline 10	&0.512543	&0.55164		&0.629808	&8.96E-010\\
+\hline 20	&0.503097	&0.512479	&0.528819	&9.75E-010\\
+\hline 30	&0.501373	&0.505511	&0.512543	&8.00E-010\\
+\hline 40	&0.500772	&0.503096	&0.507004	&9.86E-010\\
+\hline 50	&0.499039/0.500494	&0.501061/0.501978	&0.504326/0.500468	&5.57E-003\\\hline
+
+\end{tabular}
+
+
+\section{Plot Analysis}
+%\includegraphics[scale =0.7 ]{./condition_number.png}\\
+%\includegraphics[scale =0.75]{./eigenvalues.png}\\
+%\includegraphics[scale =0.75]{./CPUtime.png}\\
+
+\section{Observations}
+
+\begin{description}
+
+\item [CPU time:]  Overall complexity of HW7 is roughly $O(n^{2.91})$, derived from $\frac{log(31.5630) - log(0.6360)}{log((40+1)^2) - log((20+1)^2)}$. Since in inverse power method, it is necessary to use LU decomposition to get a intermediate term and LU method is about $O(n^3)$, so LU method will dominate the complexity. It is not guaranteed to directly find complexity of power method by observation in this assignment except we separately measure the time of power method phase and inverse power method phase, but that is not the main purpose of this assignment.
+
+\item [Eigenvalues:] The smallest eigenvalue tends to exponentially decay as the matrix size expands. The largest eigenvalue maintains to be $1$ all the way. 
+
+\item [Condition number:] The condition number ascends exponentially as the resistors per side doubles which means as the matrix size getting larger, the numerical solution of the system is getting way more inaccurate. 
+
+\item [Accuracy:] In my program, I use the following equation as my stopping criteria. Therefore, if the RHS is smaller than $10^{-9}$, then my result is extremely close to the true eigenvalue.\\
+%\includegraphics[scale =0.5]{./stopping_criteria.png}\\
+
+\item[Overall:] The overall process for finding condition number works pretty well since the time required to get the result is fast enough to me. So, power method and its inverse form are both very good iterative method.
+
+
+\end{description}
+
+
+\end{document} 

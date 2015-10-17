@@ -1,0 +1,60 @@
+largest 3 eigenvalues: 
+ 6.372281; 2.000000; 0.627719;
+smallest 3 eigenvalues: 
+ 0.627719; 2.000000; 6.372281;
+iter 20
+error: 4.909935E-10
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.001s
+largest 3 eigenvalues: 
+ 67.840399; 20.431729; 4.455992;
+smallest 3 eigenvalues: 
+ 0.512543; 0.551640; 0.629808;
+iter 249
+error: 9.393302E-10
+
+real	0m0.015s
+user	0m0.012s
+sys	0m0.000s
+largest 3 eigenvalues: 
+ 270.495189; 81.223819; 17.235222;
+smallest 3 eigenvalues: 
+ 0.503097; 0.512479; 0.528819;
+iter 909
+error: 9.943362E-10
+
+real	0m0.258s
+user	0m0.256s
+sys	0m0.000s
+largest 3 eigenvalues: 
+ 608.253606; 182.544889; 38.538680;
+smallest 3 eigenvalues: 
+ 0.501373; 0.505511; 0.512543;
+iter 1939
+error: 9.936011E-10
+
+real	0m1.836s
+user	0m1.793s
+sys	0m0.032s
+largest 3 eigenvalues: 
+ 1081.115447; 324.394506; 68.364136;
+smallest 3 eigenvalues: 
+ 0.500772; 0.503093; 0.507004;
+iter 3262
+error: 9.970869E-10
+
+real	0m7.485s
+user	0m7.379s
+sys	0m0.068s
+largest 3 eigenvalues: 
+ 1689.080688; 506.772618; 106.711318;
+smallest 3 eigenvalues: 
+ 0.500494; 0.501978; 0.504468;
+iter 4974
+error: 9.971939E-10
+
+real	0m23.214s
+user	0m22.997s
+sys	0m0.096s

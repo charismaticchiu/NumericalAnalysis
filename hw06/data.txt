@@ -1,0 +1,42 @@
+r:1000cg:Vne: 0.482759; Vsw: 0.275862; Vse: 0.172414; R:1208.333333
+Number of iter for Congugate Gradient: 9
+
+real	0m0.006s
+user	0m0.000s
+sys	0m0.003s
+r:500cg:Vne: 0.441080; Vsw: 0.280747; Vse: 0.211722; R:850.525689
+Number of iter for Congugate Gradient: 20
+
+real	0m0.004s
+user	0m0.000s
+sys	0m0.004s
+r:200cg:Vne: 0.407872; Vsw: 0.293964; Vse: 0.248430; R:491.202658
+Number of iter for Congugate Gradient: 49
+
+real	0m0.017s
+user	0m0.017s
+sys	0m0.000s
+r:100cg:Vne: 0.392841; Vsw: 0.301598; Vse: 0.265615; R:307.389238
+Number of iter for Congugate Gradient: 96
+
+real	0m0.401s
+user	0m0.401s
+sys	0m0.000s
+r:50cg:Vne: 0.382571; Vsw: 0.307028; Vse: 0.277334; R:185.644983
+Number of iter for Congugate Gradient: 185
+
+real	0m19.553s
+user	0m19.540s
+sys	0m0.008s
+r:40cg:Vne: 0.379942; Vsw: 0.308437; Vse: 0.280325; R:156.853212
+Number of iter for Congugate Gradient: 228
+
+real	1m4.933s
+user	1m4.904s
+sys	0m0.016s
+r:20cg:Vne: 0.373215; Vsw: 0.312095; Vse: 0.287907; R:91.476893
+Number of iter for Congugate Gradient: 434
+
+real	33m25.880s
+user	33m25.044s
+sys	0m0.376s

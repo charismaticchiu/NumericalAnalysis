@@ -1,0 +1,35 @@
+Vne=0.482759; Vsw=0.275862; Vse=0.172414; Req=1208.333333
+
+real	0m0.004s
+user	0m0.000s
+sys	0m0.003s
+Vne=0.441080; Vsw=0.280752; Vse=0.211722; Req=850.530303
+
+real	0m0.001s
+user	0m0.002s
+sys	0m0.001s
+Vne=0.407838; Vsw=0.294016; Vse=0.248441; Req=491.202388
+
+real	0m0.012s
+user	0m0.012s
+sys	0m0.000s
+Vne=0.392824; Vsw=0.301635; Vse=0.265600; Req=307.389274
+
+real	0m0.511s
+user	0m0.510s
+sys	0m0.000s
+Vne=0.382576; Vsw=0.307032; Vse=0.277288; Req=185.645028
+
+real	0m28.175s
+user	0m28.149s
+sys	0m0.020s
+Vne=0.379957; Vsw=0.308423; Vse=0.280271; Req=156.853262
+
+real	1m44.031s
+user	1m43.963s
+sys	0m0.048s
+Vne=0.373304; Vsw=0.311969; Vse=0.287845; Req=91.476989
+
+real	103m50.759s
+user	103m49.180s
+sys	0m0.500s
